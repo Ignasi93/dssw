@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registro</title>
+	<link rel="stylesheet" href="/styles/main.css">
+	<meta charset="utf-8"/>
+
+	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="http://cdn.wideskyhosting.com/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="validate_es.js"></script>
+
+	<style>
+		.error {color: red}
+	</style>
+</head>
+<body>
+
+	<div id="languages">
+		<nav>
+			<a href="/registre"><img src="/images/lan_cat.png"/></a>
+			<a href="/en/registre"><img src="/images/lan_eng.png"/></a>
+			<a href="/es/registre"><img src="/images/lan_esp.png"/></a>
+			<a href="/eu/registre"><img src="/images/lan_eus.png"/></a>
+		</nav>
+	</div>
+
+	<h1>Registro</h1>
+	<h2>Rellene los campos, por favor</h2>
+
+	<form method="post" action="" id="formulario">
+		<table>
+			<tbody>
+				<tr>
+					<td class="label">
+						Nombre de usuario
+					</td>
+					<td>
+						<input type="text" id="username" name="username" value="" required/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Contraseña
+					</td>
+					<td>
+						<input type="password" id="password" name="password" value="" autocomplete="off" required/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Repetir contraseña
+					</td>
+					<td>
+						<input type="password" id="repeatPassword" name="repeatPassword" value="" required/>
+					</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Correo electrónico
+					</td>
+					<td>
+						<input type="email" id="email" name="email" value="" required/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="submit" value="Enviar"/>
+		<input type="button" value="Atrás" onCLick="history.go(-1);return true;">
+	</form>
+</body>
+</html>

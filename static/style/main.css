@@ -2,3 +2,9 @@ body {
 	font-family: Verdana, Helvetica, sans-serif;
 	background-color: #DDDDDD;
 }
+
+#languages {
+	float: right;
+	width: 14%;
+	height: 12%;
+}

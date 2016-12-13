@@ -2,30 +2,24 @@
 # -*- coding: utf-8 -*-
 
 import webapp2
+from google.appengine.ext.webapp \
+	import template
 
 class EnglishHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
-		self.response.write ( '<html><body><head><link rel="stylesheet" href="/styles/main.css"</head>' )
-		self.response.write ( '<h1>Hello world!</h1><img src="/images/uk.gif"/>' )
-		self.response.write ( '</body></html>' )
+		self.response.out.write ( template.render ( 'main_en.html', {}  ) )
 
 class SpanishHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
-		self.response.write ( '<html><body><head><link rel="stylesheet" href="/styles/main.css"</head>' )
-		self.response.write ( '<h1>¡Hola mundo!</h1><img src="/images/espanya.gif"/>' )
-		self.response.write ( '</body></html>' )
+		self.response.out.write ( template.render ( 'main_es.html', {} ) )
 
 class EuskaraHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
-		self.response.write ( '<html><body><head><link rel="stylesheet" href="/styles/main.css"</head>' )
-		self.response.write ( '<h1>Kaixo mundua!</h1><img src="/images/ikurrinya.gif"/>' )
-		self.response.write ( '</body></html>' )
+		self.response.out.write ( template.render ( 'main_eu.html', {} ) )
 
 class MainHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
-		self.response.write ( '<html><body><head><link rel="stylesheet" href="/styles/main.css"</head>' )
-		self.response.write ( '<h1>Hola mon!</h1><img src="/images/senyera.gif"/>' )
-		self.response.write ( '</body></html>' )
+		self.response.out.write ( template.render ( 'main_ca.html', {} ) )
 
 app = webapp2.WSGIApplication ( [
 	( '/', MainHandler ),
