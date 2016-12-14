@@ -3,6 +3,10 @@ body {
 	background-color: #DDDDDD;
 }
 
+h6 {
+	color: red;
+}
+
 #languages {
 	float: right;
 	width: 14%;

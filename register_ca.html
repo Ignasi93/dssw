@@ -7,7 +7,7 @@
 
 	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="http://cdn.wideskyhosting.com/js/jquery.validate.js"></script>
-	<script type="text/javascript" src="/js/validate.js"></script>
+	<!--<script type="text/javascript" src="/js/validate.js"></script>-->
 
 	<style>
 		.error {color: red}
@@ -35,7 +35,10 @@
 						Nom d'usuari
 					</td>
 					<td>
-						<input type="text" id="username" name="username" value="" required/>
+						<input type="text" id="username" name="username" value="{{username}}" required/>
+					</td>
+					<td>
+						<p class="error">{{errorUN}}</p>
 					</td>
 				</tr>
 				<tr>
@@ -43,7 +46,10 @@
 						Contrasenya
 					</td>
 					<td>
-						<input type="password" id="password" name="password" value="" autocomplete="off" required/>
+						<input type="password" id="password" name="password" value="{{password}}" autocomplete="off" required/>
+					</td>
+					<td>
+						<p class="error">{{errorPW}}</p>
 					</td>
 				</tr>
 				<tr>
@@ -51,7 +57,10 @@
 						Repetir contrasenya
 					</td>
 					<td>
-						<input type="password" id="repeatPassword" name="repeatPassword" value="" required/>
+						<input type="password" id="repeatPassword" name="repeatPassword" value="{{repeatPassword}}" required/>
+					</td>
+					<td>
+						<p class="error">{{errorRPW}}</p>
 					</td>
 				</tr>
 				<tr>
@@ -59,13 +68,19 @@
 						Correu electrònic
 					</td>
 					<td>
-						<input type="email" id="email" name="email" value="" required/>
+						<input type="email" id="email" name="email" value="{{email}}" required/>
+					</td>
+					<td>
+						<p class="error">{{errorEM}}</p>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		<input type="submit" value="Enviar"/>
 		<input type="button" value="Enrere" onCLick="history.go(-1);return true;"/>
+		<form action="/usuaris">
+			<input type="submit" value="Usuaris"/>
+		</form>
 	</form>
 </body>
 </html>
