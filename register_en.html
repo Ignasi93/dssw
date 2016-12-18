@@ -35,7 +35,7 @@
 						User name
 					</td>
 					<td>
-						<input type="text" id="username" name="username" value="{{username}}" required/>
+						<input type="text" id="username" name="username" value="{{username}}"/>
 					</td>
 					<td>
 						<p class="error">{{errorUN}}</p>
@@ -46,7 +46,7 @@
 						Password
 					</td>
 					<td>
-						<input type="password" id="password" name="password" value="{{password}}" autocomplete="off" required/>
+						<input type="password" id="password" name="password" value="{{password}}" autocomplete="off"/>
 					</td>
 					<td>
 						<p class="error">{{errorPW}}</p>
@@ -57,7 +57,7 @@
 						Repeat password
 					</td>
 					<td>
-						<input type="password" id="repeatPassword" name="repeatPassword" value="{{repeatPassword}}" required/>
+						<input type="password" id="repeatPassword" name="repeatPassword" value="{{repeatPassword}}"/>
 					</td>
 					<td>
 						<p class="error">{{errorRPW}}</p>
@@ -68,7 +68,7 @@
 						Email
 					</td>
 					<td>
-						<input type="email" id="email" name="email" value="{{email}}" required/>
+						<input type="text" id="email" name="email" value="{{email}}"/>
 					</td>
 					<td>
 						<p class="error">{{errorEM}}</p>
@@ -78,9 +78,10 @@
 		</table>
 		<input type="submit" value="Send"/>
 		<input type="button" value="Back" onCLick="history.go(-1);return true;">
-		<form action="/en/usuaris">
-			<input type="submit" value="Users"/>
-		</form>
+		<!--<form action="/en/usuaris">
+			<input type="button" value="Users"/>
+		</form>-->
+		<a href="/en/usuaris" class="button">Users</a>
 	</form>
 </body>
 </html>

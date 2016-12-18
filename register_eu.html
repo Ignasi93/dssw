@@ -35,7 +35,7 @@
 						Bazero izena
 					</td>
 					<td>
-						<input type="text" id="username" name="username" value="{{username}}" required/>
+						<input type="text" id="username" name="username" value="{{username}}"/>
 					</td>
 					<td>
 						<p class="error">{{errorUN}}</p>
@@ -46,7 +46,7 @@
 						Pasahitza
 					</td>
 					<td>
-						<input type="password" id="password" name="password" value="{{password}}" autocomplete="off" required/>
+						<input type="password" id="password" name="password" value="{{password}}" autocomplete="off"/>
 					</td>
 					<td>
 						<p class="error">{{errorPW}}</p>
@@ -57,7 +57,7 @@
 						Errepikatu pasahitza
 					</td>
 					<td>
-						<input type="password" id="repeatPassword" name="repeatPassword" value="{{repeatPassword}}" required/>
+						<input type="password" id="repeatPassword" name="repeatPassword" value="{{repeatPassword}}"/>
 					</td>
 					<td>
 						<p class="error">{{errorRPW}}</p>
@@ -68,7 +68,7 @@
 						Email
 					</td>
 					<td>
-						<input type="email" id="email" name="email" value="{{email}}" required/>
+						<input type="text" id="email" name="email" value="{{email}}"/>
 					</td>
 					<td>
 						<p class="error">{{errorEM}}</p>
@@ -78,9 +78,10 @@
 		</table>
 		<input type="submit" value="Bidali"/>
 		<input type="button" value="Atzera" onCLick="history.go(-1);return true;">
-		<form action="/eu/usuaris">
-			<input type="submit" value="Erabiltzaileak"/>
-		</form>
+		<!--<form action="/eu/usuaris">
+			<input type="button" value="Erabiltzaileak"/>
+		</form>-->
+		<a href="/eu/usuaris" class="button">Erabiltzaileak</a>
 	</form>
 </body>
 </html>
