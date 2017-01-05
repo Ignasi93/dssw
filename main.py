@@ -263,10 +263,29 @@ class RegisterEuskaraHandler ( webapp2.RequestHandler ) :
 
 #**********************************************************************************
 
+class ValidateMainHandler ( webapp2.RequestHandler ) :
+	def get ( self ) :
+		error = False
+		errorEM = ""
+		email = self.request.get ( 'emailV' )
+		if not validate ( email, 2 ) :
+			error = True
+			errorEM = "Not a valid email "
+		alreadyInDB = Usuari.query ( Usuari.correu == email ).count ()
+		if alreadyInDB >= 1 :
+			error = True
+			errorEM += "Email already used"
+		if not error :
+			errorEM = ""
+		self.response.write ( errorEM )
+
+#**********************************************************************************
+
 class UsersMainHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
 		usuaris = Usuari.query ()
 		self.response.write ( '<h1>Usuaris registrats</h1>' )
+		self.response.write ( '<link rel="stylesheet" href="/styles/main.css">' )
 		self.response.write ( '<link rel="stylesheet" href="/styles/table.css">' )
 		self.response.write ( '''
 			<table>
@@ -290,6 +309,7 @@ class UsersEnglishHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
 		usuaris = Usuari.query ()
 		self.response.write ( '<h1>Registered users</h1>' )
+		self.response.write ( '<link rel="stylesheet" href="/styles/main.css">' )
 		self.response.write ( '<link rel="stylesheet" href="/styles/table.css">' )
 		self.response.write ( '''
 			<table>
@@ -313,6 +333,7 @@ class UsersSpanishHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
 		usuaris = Usuari.query ()
 		self.response.write ( '<h1>Usuarios registrados</h1>' )
+		self.response.write ( '<link rel="stylesheet" href="/styles/main.css">' )
 		self.response.write ( '<link rel="stylesheet" href="/styles/table.css">' )
 		self.response.write ( '''
 			<table>
@@ -336,6 +357,7 @@ class UsersEuskaraHandler ( webapp2.RequestHandler ) :
 	def get ( self ) :
 		usuaris = Usuari.query ()
 		self.response.write ( '<h1>Erabiltzaile erregistratuak</h1>' )
+		self.response.write ( '<link rel="stylesheet" href="/styles/main.css">' )
 		self.response.write ( '<link rel="stylesheet" href="/styles/table.css">' )
 		self.response.write ( '''
 			<table>
@@ -370,4 +392,5 @@ app = webapp2.WSGIApplication ( [
 	( '/en/usuaris', UsersEnglishHandler ),
 	( '/es/usuaris', UsersSpanishHandler ),
 	( '/eu/usuaris', UsersEuskaraHandler ),
+	( '/validar/', ValidateMainHandler ),
 ], debug = True)

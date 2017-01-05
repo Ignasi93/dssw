@@ -8,9 +8,11 @@
 	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="http://cdn.wideskyhosting.com/js/jquery.validate.js"></script>
 	<!--<script type="text/javascript" src="/js/validate.js"></script>-->
+	<script src="/js/validateAjax.js"></script>
 
 	<style>
 		.error {color: red}
+		.correct {color: green}
 	</style>
 </head>
 <body>
@@ -68,19 +70,19 @@
 						Correu electrònic
 					</td>
 					<td>
-						<input type="text" id="email" name="email" value="{{email}}"/>
+						<input type="text" id="email" name="email" onblur="validateAjax('ca')" value="{{email}}"/>
 					</td>
 					<td>
-						<p class="error">{{errorEM}}</p>
+						<p class="error" id="errorEM">{{errorEM}}</p>
+					</td>
+					<td>
+						<p class="correct" id="validEM">{{validEM}}</p>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		<input type="submit" value="Enviar"/>
 		<input type="button" value="Enrere" onCLick="history.go(-1);return true;"/>
-		<!--<form action="/usuaris">
-			<input type="button" value="Usuaris"/>
-		</form>-->
 		<a href="/usuaris" class="button">Usuaris</a>
 	</form>
 </body>

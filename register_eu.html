@@ -8,9 +8,11 @@
 	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="http://cdn.wideskyhosting.com/js/jquery.validate.js"></script>
 	<!--<script type="text/javascript" src="/js/validate_eu.js"></script>-->
+	<script src="/js/validateAjax.js"></script>
 
 	<style>
 		.error {color: red}
+		.correct {color: green}
 	</style>
 </head>
 <body>
@@ -68,10 +70,13 @@
 						Email
 					</td>
 					<td>
-						<input type="text" id="email" name="email" value="{{email}}"/>
+						<input type="text" id="email" name="email" onblur="validateAjax('eu')" value="{{email}}"/>
 					</td>
 					<td>
-						<p class="error">{{errorEM}}</p>
+						<p class="error" id="errorEM">{{errorEM}}</p>
+					</td>
+					<td>
+						<p class="correct" id="validEM">{{validEM}}</p>
 					</td>
 				</tr>
 			</tbody>
