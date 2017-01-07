@@ -5,6 +5,7 @@ import webapp2
 import os
 import urllib
 import re
+import json
 from google.appengine.ext.webapp \
 	import template
 from google.appengine.api import images
@@ -379,6 +380,169 @@ class UsersEuskaraHandler ( webapp2.RequestHandler ) :
 
 #**********************************************************************************
 
+class MapMainHandler ( webapp2.RequestHandler ) :
+	def get ( self ) :
+		self.response.out.write ( template.render ( 'mapa_ca.html', {} ) )
+
+	def post ( self ) :
+		mapurl = 'http://maps.googleapis.com/maps/api/geocode/json?'
+		address = self.request.get ( 'address' )
+		url = mapurl + urllib.urlencode ( { 'address': address } )
+		uh = urllib.urlopen ( url )
+		data = uh.read ()
+		js = json.loads ( str ( data ) )
+		matrix = js [ 'results' ]
+		if len ( matrix ) > 0 :
+			adresa = matrix [0]['formatted_address']
+			self.response.write ( '''Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>''' )
+			self.response.write ( '''Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</br>''' )
+			self.response.write ( '''@@@@@
+				var latlong = { lat: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + ''', lng: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''};
+				var mapa = new google.maps.Map( document.getElementById ( 'map' ), {
+					zoom: 14,
+					center: latlong
+				});
+				var marker = new google.maps.Marker ({
+					position: latlong,
+					map: map,
+					title: ' ''' + adresa + ''' '
+				});
+				var content = '<div id="content">' + '<div id="site">' + '</div>' + '<h1 id="firstHeading" class="dirstHeading">''' + adresa + '''</h1>' +
+				'<div id="bodyContent">' + '<p>Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>' +
+				'Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</p>' + '</div>' + '</div>';
+				var infowindow = new google.maps.InfoWindow({
+					content: content
+				});
+				marker.addListener ( 'click', function () {
+					infowindow.open ( mapa, marker );
+				});			
+			''' )
+		else :
+			self.response.write ( '''<br/> No s'ha trobat cap resultat''' )
+
+class MapEnglishHandler ( webapp2.RequestHandler ) :
+	def get ( self ) :
+		self.response.out.write ( template.render ( 'mapa_en.html', {} ) )
+
+	def post ( self ) :
+		mapurl = 'http://maps.googleapis.com/maps/api/geocode/json?'
+		address = self.request.get ( 'address' )
+		url = mapurl + urllib.urlencode ( { 'address': address } )
+		uh = urllib.urlopen ( url )
+		data = uh.read ()
+		js = json.loads ( str ( data ) )
+		matrix = js [ 'results' ]
+		if len ( matrix ) > 0 :
+			adresa = matrix [0]['formatted_address']
+			self.response.write ( '''Latitude: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>''' )
+			self.response.write ( '''Longitude: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</br>''' )
+			self.response.write ( '''@@@@@
+				var latlong = { lat: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + ''', lng: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''};
+				var mapa = new google.maps.Map( document.getElementById ( 'map' ), {
+					zoom: 14,
+					center: latlong
+				});
+				var marker = new google.maps.Marker ({
+					position: latlong,
+					map: map,
+					title: ' ''' + adresa + ''' '
+				});
+				var content = '<div id="content">' + '<div id="site">' + '</div>' + '<h1 id="firstHeading" class="dirstHeading">''' + adresa + '''</h1>' +
+				'<div id="bodyContent">' + '<p>Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>' +
+				'Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</p>' + '</div>' + '</div>';
+				var infowindow = new google.maps.InfoWindow({
+					content: content
+				});
+				marker.addListener ( 'click', function () {
+					infowindow.open ( mapa, marker );
+				});			
+			''' )
+		else :
+			self.response.write ( '''<br/> There are no results''' )
+
+class MapSpanishHandler ( webapp2.RequestHandler ) :
+	def get ( self ) :
+		self.response.out.write ( template.render ( 'mapa_es.html', {} ) )
+
+	def post ( self ) :
+		mapurl = 'http://maps.googleapis.com/maps/api/geocode/json?'
+		address = self.request.get ( 'address' )
+		url = mapurl + urllib.urlencode ( { 'address': address } )
+		uh = urllib.urlopen ( url )
+		data = uh.read ()
+		js = json.loads ( str ( data ) )
+		matrix = js [ 'results' ]
+		if len ( matrix ) > 0 :
+			adresa = matrix [0]['formatted_address']
+			self.response.write ( '''Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>''' )
+			self.response.write ( '''Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</br>''' )
+			self.response.write ( '''@@@@@
+				var latlong = { lat: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + ''', lng: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''};
+				var mapa = new google.maps.Map( document.getElementById ( 'map' ), {
+					zoom: 14,
+					center: latlong
+				});
+				var marker = new google.maps.Marker ({
+					position: latlong,
+					map: map,
+					title: ' ''' + adresa + ''' '
+				});
+				var content = '<div id="content">' + '<div id="site">' + '</div>' + '<h1 id="firstHeading" class="dirstHeading">''' + adresa + '''</h1>' +
+				'<div id="bodyContent">' + '<p>Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>' +
+				'Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</p>' + '</div>' + '</div>';
+				var infowindow = new google.maps.InfoWindow({
+					content: content
+				});
+				marker.addListener ( 'click', function () {
+					infowindow.open ( mapa, marker );
+				});			
+			''' )
+		else :
+			self.response.write ( '''<br/> No se han encontrado resultados''' )
+
+class MapEuskaraHandler ( webapp2.RequestHandler ) :
+	def get ( self ) :
+		self.response.out.write ( template.render ( 'mapa_eu.html', {} ) )
+
+	def post ( self ) :
+		mapurl = 'http://maps.googleapis.com/maps/api/geocode/json?'
+		address = self.request.get ( 'address' )
+		url = mapurl + urllib.urlencode ( { 'address': address } )
+		uh = urllib.urlopen ( url )
+		data = uh.read ()
+		js = json.loads ( str ( data ) )
+		matrix = js [ 'results' ]
+		if len ( matrix ) > 0 :
+			adresa = matrix [0]['formatted_address']
+			self.response.write ( '''Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>''' )
+			self.response.write ( '''Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</br>''' )
+			self.response.write ( '''@@@@@
+				var latlong = { lat: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + ''', lng: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''};
+				var mapa = new google.maps.Map( document.getElementById ( 'map' ), {
+					zoom: 14,
+					center: latlong
+				});
+				var marker = new google.maps.Marker ({
+					position: latlong,
+					map: map,
+					title: ' ''' + adresa + ''' '
+				});
+				var content = '<div id="content">' + '<div id="site">' + '</div>' + '<h1 id="firstHeading" class="dirstHeading">''' + adresa + '''</h1>' +
+				'<div id="bodyContent">' + '<p>Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>' +
+				'Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</p>' + '</div>' + '</div>';
+				var infowindow = new google.maps.InfoWindow({
+					content: content
+				});
+				marker.addListener ( 'click', function () {
+					infowindow.open ( mapa, marker );
+				});			
+			''' )
+		else :
+			self.response.write ( '''<br/> No s'ha trobat cap resultat(pendiente)''' )
+		
+
+#**********************************************************************************
+
 app = webapp2.WSGIApplication ( [
 	( '/', MainHandler ),
 	( '/en', EnglishHandler ),
@@ -393,4 +557,8 @@ app = webapp2.WSGIApplication ( [
 	( '/es/usuaris', UsersSpanishHandler ),
 	( '/eu/usuaris', UsersEuskaraHandler ),
 	( '/validar/', ValidateMainHandler ),
+	( '/mapa', MapMainHandler ),
+	( '/en/mapa', MapEnglishHandler ),
+	( '/es/mapa', MapSpanishHandler ),
+	( '/eu/mapa', MapEuskaraHandler ),
 ], debug = True)
