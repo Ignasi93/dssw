@@ -514,8 +514,8 @@ class MapEuskaraHandler ( webapp2.RequestHandler ) :
 		matrix = js [ 'results' ]
 		if len ( matrix ) > 0 :
 			adresa = matrix [0]['formatted_address']
-			self.response.write ( '''Latitud: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>''' )
-			self.response.write ( '''Longitud: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</br>''' )
+			self.response.write ( '''Latitudea: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + '''</br>''' )
+			self.response.write ( '''Longitudea: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''</br>''' )
 			self.response.write ( '''@@@@@
 				var latlong = { lat: ''' + str ( matrix[0]['geometry']['location']['lat'] ) + ''', lng: ''' + str ( matrix[0]['geometry']['location']['lng'] ) + '''};
 				var mapa = new google.maps.Map( document.getElementById ( 'map' ), {
@@ -538,7 +538,7 @@ class MapEuskaraHandler ( webapp2.RequestHandler ) :
 				});			
 			''' )
 		else :
-			self.response.write ( '''<br/> No s'ha trobat cap resultat(pendiente)''' )
+			self.response.write ( '''<br/> Ez da inongo emaitzik aurkitu''' )
 		
 
 #**********************************************************************************
