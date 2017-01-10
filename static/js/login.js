@@ -1,9 +1,8 @@
 function onSignIn ( user ) {
 	var profile = user.getBasicProfile ();
 	$ ( "#login" ).hide ();
-	$ ( "#logout" ).html ( "<div style='float:right;'><img src='" + profile.getImageUrl () +
-	"'></div><div style='float:right; padding:10px;'><b>" + profile.getName() +
-	"</b><br/>" + profile.getEmail () + "<br/>" + "<a href='#' onclick='logout();'>Sortir</a></div>" );
+	$ ( "#logout" ).html ( "<div style='float:right; padding:10px;'><b> Hello " + profile.getName() +
+	"</b><br/>" + "<a href='#' onclick='logout();'>Logout</a></div>" );
 	$ ( "#logout" ).show ();
 }
 
