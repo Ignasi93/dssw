@@ -6,16 +6,30 @@ import os
 import urllib
 import re
 import json
+from webapp2_extras import sessions
+import session_module
 from google.appengine.ext.webapp \
 	import template
 from google.appengine.api import images
 from google.appengine.ext import ndb
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+
+myconfig_dict = {}
+myconfig_dict[ 'webapp2_extras.sessions' ] = {
+	'secret_key' : 'my-super-secret-key-somemorearbitarythingstosay',
+}
 
 class Usuari ( ndb.Model ) :
 	nom = ndb.StringProperty ( required = True )
 	contrasenya = ndb.StringProperty ( required = True )
 	correu = ndb.StringProperty ( required = True )
 	data = ndb.DateTimeProperty ( auto_now_add = True )
+
+class Image ( ndb.Model ) :
+	user = ndb.StringProperty ()
+	public = ndb.BooleanProperty ()
+	blob_key = ndb.BlobKeyProperty ()
 
 #**********************************************************************************
 
@@ -543,6 +557,55 @@ class MapEuskaraHandler ( webapp2.RequestHandler ) :
 
 #**********************************************************************************
 
+class PLoginMainHandler ( session_module.BaseSessionHandler ) :
+	def get ( self ) :
+		if self.session.get ( 'successfulLogin' ) :
+			self.response.out.write ( template.render ( 'photos_ca.html', {} ) )
+		else :
+			self.response.out.write ( template.render ( 'plogin_ca.html', {} ) )
+	def post ( self ) :
+		correu = self.request.get( "email" )
+		contrasenya = self.request.get ( "password" )
+		usuaris = Usuari.query ( ndb.AND ( Usuari.correu == correu, Usuari.contrasenya == contrasenya ) )
+		if usuaris.count () > 0 :
+			for eachUser in usuaris :
+				self.session[ 'successfulLogin' ] = eachUser.nom
+				self.session[ 'successfulEmail' ] = eachUser.correu
+			self.response.write ( '''<script>parent.location.href=parent.location.href</script>''' )
+		else :
+			#self.response.write ( '''<script>alert('Correu o contrasenya incorrectes');</script>''' )
+			self.response.write ( '''<h6>Correu o contrasenya incorrectes</h6>''' )
+			self.response.out.write ( template.render ( 'plogin_ca.html', {} ) )
+
+
+class PLogoutMainHandler ( session_module.BaseSessionHandler ) :
+	def get ( self ) :
+		del self.session['successfulLogin']
+		del self.session['successfulEmail']
+		self.response.out.write ( template.render ( 'plogin_ca.html', {} ) )
+
+class UploadMainHandler ( session_module.BaseSessionHandler, blobstore_handlers.BlobstoreDownloadHandler ) :
+	def post ( self ) :
+		foto = self.get_uploads ( 'photo' )
+		blob_info = foto[0]
+		img = Image ( email = self.session.get ( 'successfulEmail' ), public = self.request.get ( "privilege" ) == "public", blob_key = blob_info.key () )
+		img.put ()
+		self.response.write ( '''<script>parent.location.href=parent.location.href</script>''' )
+
+class GalleryMainHandler ( session_module.BaseSessionHandler, blobstore_handlers.BlobstoreUploadHandler ) :
+	def get ( self ) :
+		fotos = blobstore.BlobInfo.all()
+		for foto in fotos :
+			self.response.out.write ( '<img src="/serve/%s"></image></td>' % foto.key() )
+
+class ServeHandler ( blobstore_handlers.BlobstoreDownloadHandler ) :
+	def get ( self, resource ) :
+		resource = str ( urllib.unquote ( resource ) )
+		blob_info = blobstore.BlobInfo.get ( resource )
+		self.send_blob ( blob_info )
+
+#**********************************************************************************
+
 app = webapp2.WSGIApplication ( [
 	( '/', MainHandler ),
 	( '/en', EnglishHandler ),
@@ -561,4 +624,9 @@ app = webapp2.WSGIApplication ( [
 	( '/en/mapa', MapEnglishHandler ),
 	( '/es/mapa', MapSpanishHandler ),
 	( '/eu/mapa', MapEuskaraHandler ),
-], debug = True)
+	( '/plogin', PLoginMainHandler ),
+	( '/plogout', PLogoutMainHandler ),
+	( '/pujar', UploadMainHandler ),
+	( '/galeria', GalleryMainHandler ),
+	( '/serve/([^/]+)?', ServeHandler ),
+], config=myconfig_dict, debug = True)
