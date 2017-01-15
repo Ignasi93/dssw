@@ -7,14 +7,15 @@
 </head>
 <body>
 	<form method="post">
-		<p>Per a entrar, pose el seu correu i contrasenya:</p>
+		<p>Para entrar, ponga su correo y contraseña:</p>
 		<p>
-			Correu:
+			Correo:
 			<input type="email" id="email" name="email" value="{{email}}"/>
-			Contrasenya:
+			Contraseña:
 			<input type="password" id="password" name="password" value="{{password}}" autocomplete="off" />
 			<input type="submit" value="Entrar" />
 		</p>
+		<p><input type="button" value="Volver" onCLick="history.go(-1);return true;"/></p>
 	</form>
 </body>
 </html>

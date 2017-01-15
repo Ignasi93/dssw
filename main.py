@@ -559,8 +559,13 @@ class MapEuskaraHandler ( webapp2.RequestHandler ) :
 
 class PLoginMainHandler ( session_module.BaseSessionHandler ) :
 	def get ( self ) :
+
 		if self.session.get ( 'successfulLogin' ) :
-			self.response.out.write ( template.render ( 'photos_ca.html', {} ) )
+			self.response.write ( '''
+				<link rel="stylesheet" href="/styles/main.css">
+				<a href="/plogout" class="button" style="float: right;">Sortir</a>
+			''' )
+			self.response.write ( '''<iframe width="100%" height="100%" name="login" frameBorder="0" src="/pujar"></iframe>''' )
 		else :
 			self.response.out.write ( template.render ( 'plogin_ca.html', {} ) )
 	def post ( self ) :
@@ -584,19 +589,145 @@ class PLogoutMainHandler ( session_module.BaseSessionHandler ) :
 		del self.session['successfulEmail']
 		self.response.out.write ( template.render ( 'plogin_ca.html', {} ) )
 
-class UploadMainHandler ( session_module.BaseSessionHandler, blobstore_handlers.BlobstoreDownloadHandler ) :
-	def post ( self ) :
-		foto = self.get_uploads ( 'photo' )
-		blob_info = foto[0]
-		img = Image ( email = self.session.get ( 'successfulEmail' ), public = self.request.get ( "privilege" ) == "public", blob_key = blob_info.key () )
-		img.put ()
-		self.response.write ( '''<script>parent.location.href=parent.location.href</script>''' )
+FORM_SUBIR_FOTO = """
+	<html><body>
+	<form action="%(url)s" method="POST" enctype="multipart/form-data">
+	<input type="file" name="file"><br>
+	<input type="radio" name="access" value="public" checked="checked"/>
+	Public
+	<input type="radio" name="access" value="private" /> Private <p>
+	<input type="submit" name="submit" value="Subir">
+	</form></body></html>"""
 
-class GalleryMainHandler ( session_module.BaseSessionHandler, blobstore_handlers.BlobstoreUploadHandler ) :
+class UploadMainHandler ( session_module.BaseSessionHandler, blobstore_handlers.BlobstoreUploadHandler ) :
 	def get ( self ) :
-		fotos = blobstore.BlobInfo.all()
-		for foto in fotos :
-			self.response.out.write ( '<img src="/serve/%s"></image></td>' % foto.key() )
+		if self.session.get ( 'successfulLogin' ) :
+			upload_url = blobstore.create_upload_url ( '/pujar' )
+			self.response.out.write ( FORM_SUBIR_FOTO % { 'url' : upload_url } )
+	def post ( self ) :
+		foto = self.get_uploads ( 'file' )
+		blob_info = foto[0]
+		img = Image ( user = self.session.get ( 'successfulEmail' ), public = self.request.get ( "access" ) == "public", blob_key = blob_info.key () )
+		img.put ()
+		self.response.out.write ( '''<iframe width="100%" height="100%" name="login" frameBorder="0" src="/galeria"></iframe>''' )
+
+class GalleryMainHandler ( session_module.BaseSessionHandler, blobstore_handlers.BlobstoreDownloadHandler ) :
+	def get ( self ) :
+		fotos = Image.query ( Image.public == True )
+		self.response.out.write ( '''
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<title>Galeria</title>
+				<link rel="stylesheet" type"text/css" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css"/>
+			</head>
+			<body>
+				<style type="text/css">
+
+				body {
+					font-family: "Aller", "sans-serif";
+				}
+				a:-webkit-any-link {
+					text-decoration: none;
+				}
+				ul {
+					list-style-type: none;
+				}
+				.fade {
+					opacity: 0.8;
+					transition: opacity .25s ease-in-out;
+					-moz-transition: opacity .25s ease-in-out;
+					-webkit-transition: opacity .25s ease-in-out;
+				}
+				.fade:hover {
+					opacity: 1;
+				}
+				.img-wrapper {
+					width: 300px;
+					height: 240px;
+					border: 0.1em solid #ccc;
+					border-radius: 0.4em;
+					background-color: #f3f3f3;
+					box-shadow: 0.1em 0.1em 0.5em -0.2em #777;
+					margin: 1em 1em;
+				}
+				img {
+					border-radius: 0.4em 0.4em 0em 0em;
+				}
+				.gallery-wrapper ul li{
+					display: inline-block;
+				}
+				h1 {
+					padding-left: 14em;
+				}
+				h4 {
+					text-align: center;
+					font-size: 1em;
+					margin: 0;
+					padding: 0.5em 2em;
+					text-transform: uppercase;
+					font-weight: bold;
+					color: black;
+				}
+				.logo {
+					margin-left: 22em;
+					margin-bottom: 4em;
+				}
+				</style>
+
+				<div class="gallery-wrapper">
+				<h1>Galeria de fotos</h1>
+					<ul>
+			''' )
+		if self.session.get ( 'successfulLogin' ) :
+			fotosp = Image.query ( ndb.AND ( Image.user == self.session.get ( 'successfulEmail' ), Image.public == False ) )
+			for fotos in fotosp :
+				foto = blobstore.BlobInfo.get ( str ( fotos.blob_key) )
+				self.response.out.write ( '''<li>
+					<figure class="img-wrapper fade">''' )
+				self.response.out.write ( '''<img width="300" height="200" src="serve/%s"><h4>Privada</h4></figure>
+					</li>''' % foto.key () )
+		for fotoPu in fotos :
+			foto = blobstore.BlobInfo.get ( str ( fotoPu.blob_key ) )
+			self.response.out.write ( '''<li>
+				<figure class="img-wrapper fade">''' )
+			self.response.out.write ( '''<img width="300" height="200" src="serve/%s"><h4>P&uacute;blica</h4></figure>
+				</li>''' % foto.key () )
+		self.response.out.write ( '''
+				</ul>
+			</div>
+			</body>
+			<script
+				src="https://code.jquery.com/jquery-1.11.0.min.js"
+				integrity="sha256-spTpc41vj4dOkKjrGokIrHkJgNA0xMS98Pw9N7ir9oI="
+				crossorigin="anonymous"></script>
+			<script
+				src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"
+				integrity="sha256-HmfY28yh9v2U4HfIXC+0D6HCdWyZI42qjaiCFEJgpo0="
+				crossorigin="anonymous"></script>
+			<script type="text/javascript" src="https://gist.github.com/runtl/3451937/raw/99135ea2b36f25c495ef318566b1932aca2a7e71/jquery.fancybox-1.3.4.pack.js"></script>
+			<script type="text/javascript">
+				$(function($){
+					var addToAll = false;
+					var gallery = true;
+					var titlePosition = 'inside';
+					$(addToAll ? 'img' : 'img.fancybox' ).each(function(){
+						var $this = $(this);
+						var title = $this.attr('title');
+						var src = $this.attr('data-big') || $this.attr('src');
+						var a = $('<a href="#" class="fancybox"></a>').attr('href', src).attr('title', title);
+						$this.wrap(a);
+					});
+					if (gallery)
+						$('a.fancybox').attr('rel', 'fancyboxgallery');
+					$('a.fancybox').fancybox({
+						titlePosition: titlePosition
+					});
+				});
+				$.noConflict();
+			</script>
+			</html>
+			''' )
 
 class ServeHandler ( blobstore_handlers.BlobstoreDownloadHandler ) :
 	def get ( self, resource ) :
